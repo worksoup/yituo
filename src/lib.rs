@@ -11,8 +11,9 @@ use syn::{LitByte, LitStr};
 #[proc_macro]
 pub fn map(input: TokenStream) -> TokenStream {
     map_single_expr(input.into(), |expr| expr.to_token_stream())
-        .collect::<proc_macro2::TokenStream>()
-        .into()
+        .collect::<String>()
+        .parse()
+        .unwrap()
 }
 /// 输入一个字面值 `n`，生成元组序列 `0..n`.
 /// 最终生成表达式元组序列 `M(0)..M(n)`, 见 [`map`](macro@map).
@@ -28,8 +29,9 @@ pub fn map_seq(input: TokenStream) -> TokenStream {
             }
         }
     })
-    .collect::<proc_macro2::TokenStream>()
-    .into()
+    .collect::<String>()
+    .parse()
+    .unwrap()
 }
 /// 输入字面值 `m`, `n`，生成字面值 `s` = `m` + `n`.
 /// 最终生成表达式 `M(s)`, 见 [`map`](macro@map).
@@ -57,7 +59,8 @@ pub fn map_add(input: TokenStream) -> TokenStream {
     })
     .next()
     .unwrap()
-    .into()
+    .parse()
+    .unwrap()
 }
 /// 输入字面值 `m`, `n`，生成字面值 `s` = `m` - `n`.
 /// 最终生成表达式 `M(s)`, 见 [`map`](macro@map).
@@ -80,7 +83,8 @@ pub fn map_sub(input: TokenStream) -> TokenStream {
     })
     .next()
     .unwrap()
-    .into()
+    .parse()
+    .unwrap()
 }
 /// 输入字面值 `m`, `n`，生成字面值 `r` = `m` * `n`.
 /// 最终生成表达式 `M(r)`, 见 [`map`](macro@map).
@@ -103,7 +107,8 @@ pub fn map_mul(input: TokenStream) -> TokenStream {
     })
     .next()
     .unwrap()
-    .into()
+    .parse()
+    .unwrap()
 }
 /// 输入字面值 `m`, `n`，生成字面值 `r` = `m` / `n`.
 /// 最终生成表达式 `M(r)`, 见 [`map`](macro@map).
@@ -126,7 +131,8 @@ pub fn map_div(input: TokenStream) -> TokenStream {
     })
     .next()
     .unwrap()
-    .into()
+    .parse()
+    .unwrap()
 }
 /// 输入字面值 `a`, `b`，生成字面值 `m` = `a` % `b`.
 /// 最终生成表达式 `M(m)`, 见 [`map`](macro@map).
@@ -149,7 +155,8 @@ pub fn map_mod(input: TokenStream) -> TokenStream {
     })
     .next()
     .unwrap()
-    .into()
+    .parse()
+    .unwrap()
 }
 /// 输入字面值 `a`, `b`，生成字面值 `r` = `a` << `b`.
 /// 最终生成表达式 `M(r)`, 见 [`map`](macro@map).
@@ -171,7 +178,8 @@ pub fn map_lsh(input: TokenStream) -> TokenStream {
     })
     .next()
     .unwrap()
-    .into()
+    .parse()
+    .unwrap()
 }
 /// 输入字面值 `a`, `b`，生成字面值 `r` = `a` >> `b`.
 /// 最终生成表达式 `M(r)`, 见 [`map`](macro@map).
@@ -193,7 +201,8 @@ pub fn map_rsh(input: TokenStream) -> TokenStream {
     })
     .next()
     .unwrap()
-    .into()
+    .parse()
+    .unwrap()
 }
 /// 输入一个字面值 `n`，生成字面值 `r` = `!n`.
 /// 最终生成表达式 `M(r)`, 见 [`map`](macro@map).
@@ -211,7 +220,8 @@ pub fn map_not(input: TokenStream) -> TokenStream {
     })
     .next()
     .unwrap()
-    .into()
+    .parse()
+    .unwrap()
 }
 /// 输入字面值 `a`, `b`，生成字面值 `r` = `a` & `b` 或 `a` && `b`.
 /// 最终生成表达式 `M(r)`, 见 [`map`](macro@map).
@@ -234,7 +244,8 @@ pub fn map_and(input: TokenStream) -> TokenStream {
     })
     .next()
     .unwrap()
-    .into()
+    .parse()
+    .unwrap()
 }
 /// 输入字面值 `a`, `b`，生成字面值 `r` = `a` | `b` 或 `a` || `b`.
 /// 最终生成表达式 `M(r)`, 见 [`map`](macro@map).
@@ -257,7 +268,8 @@ pub fn map_or(input: TokenStream) -> TokenStream {
     })
     .next()
     .unwrap()
-    .into()
+    .parse()
+    .unwrap()
 }
 /// 输入字面值 `a`, `b`，生成字面值 `r` = `a` ^ `b` 或 `a` != `b`.
 /// 最终生成表达式 `M(r)`, 见 [`map`](macro@map).
@@ -280,7 +292,8 @@ pub fn map_xor(input: TokenStream) -> TokenStream {
     })
     .next()
     .unwrap()
-    .into()
+    .parse()
+    .unwrap()
 }
 /// 输入字面值 `a`, `b`，生成 `bool` 字面值 `r` = `a` > `b`.
 /// 最终生成表达式 `M(r)`, 见 [`map`](macro@map).
@@ -305,7 +318,8 @@ pub fn map_gt(input: TokenStream) -> TokenStream {
     })
     .next()
     .unwrap()
-    .into()
+    .parse()
+    .unwrap()
 }
 /// 输入字面值 `a`, `b`，生成 `bool` 字面值 `r` = `a` >= `b`.
 /// 最终生成表达式 `M(r)`, 见 [`map`](macro@map).
@@ -330,7 +344,8 @@ pub fn map_ge(input: TokenStream) -> TokenStream {
     })
     .next()
     .unwrap()
-    .into()
+    .parse()
+    .unwrap()
 }
 /// 输入字面值 `a`, `b`，生成 `bool` 字面值 `r` = `a` < `b`.
 /// 最终生成表达式 `M(r)`, 见 [`map`](macro@map).
@@ -355,7 +370,8 @@ pub fn map_lt(input: TokenStream) -> TokenStream {
     })
     .next()
     .unwrap()
-    .into()
+    .parse()
+    .unwrap()
 }
 /// 输入字面值 `a`, `b`，生成 `bool` 字面值 `r` = `a` <= `b`.
 /// 最终生成表达式 `M(r)`, 见 [`map`](macro@map).
@@ -380,7 +396,8 @@ pub fn map_le(input: TokenStream) -> TokenStream {
     })
     .next()
     .unwrap()
-    .into()
+    .parse()
+    .unwrap()
 }
 /// 输入字面值 `a`, `b`，生成 `bool` 字面值 `r` = `a` == `b`.
 /// 最终生成表达式 `M(r)`, 见 [`map`](macro@map).
@@ -405,7 +422,8 @@ pub fn map_eq(input: TokenStream) -> TokenStream {
     })
     .next()
     .unwrap()
-    .into()
+    .parse()
+    .unwrap()
 }
 /// 输入字面值 `a`, `b`，生成 `bool` 字面值 `r` = `a` != `b`.
 /// 最终生成表达式 `M(r)`, 见 [`map`](macro@map).
@@ -430,14 +448,14 @@ pub fn map_ne(input: TokenStream) -> TokenStream {
     })
     .next()
     .unwrap()
-    .into()
+    .parse()
+    .unwrap()
 }
 /// 将字符串字面值转为实际的表达式（[`proc_macro::TokenStream`]）。
 #[proc_macro]
 pub fn suppressor(input: TokenStream) -> TokenStream {
     syn::parse_macro_input!(input as LitStr)
         .value()
-        .parse::<proc_macro2::TokenStream>()
+        .parse()
         .unwrap()
-        .into()
 }

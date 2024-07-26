@@ -70,7 +70,7 @@ fn lit_2_my_lit(lit: Lit, span: Span, negative_value: bool) -> MyLit {
     };
     MyLit(lit, span)
 }
-pub fn map_single_lit<T, F, I>(input: TokenStream, f: F) -> impl Iterator<Item = TokenStream>
+pub fn map_single_lit<T, F, I>(input: TokenStream, f: F) -> impl Iterator<Item = String>
 where
     T: ToString,
     F: Fn(MyLit) -> I,
@@ -119,7 +119,7 @@ where
     replace(f(value.unwrap()), mapper)
 }
 
-pub fn map_single_expr<T, F, I>(input: TokenStream, f: F) -> impl Iterator<Item = TokenStream>
+pub fn map_single_expr<T, F, I>(input: TokenStream, f: F) -> impl Iterator<Item = String>
 where
     T: ToString,
     F: Fn(TokenTree) -> I,
@@ -150,7 +150,7 @@ where
     }
     replace(f(value.unwrap()), mapper)
 }
-pub fn map_double_lit<T, F, I>(input: TokenStream, f: F) -> impl Iterator<Item = TokenStream>
+pub fn map_double_lit<T, F, I>(input: TokenStream, f: F) -> impl Iterator<Item = String>
 where
     T: ToString,
     F: Fn(MyLit, MyLit) -> I,
@@ -204,7 +204,7 @@ where
 fn replace<T: ToString, I: IntoIterator<Item = T>>(
     iter: I,
     mapper: Vec<TokenTree>,
-) -> impl Iterator<Item = TokenStream> {
+) -> impl Iterator<Item = String> {
     let token_stream_str = mapper.into_iter().collect::<TokenStream>().to_string();
     let mut modified_stream = Vec::new();
     let mut tmp_str = String::new();
@@ -230,8 +230,7 @@ fn replace<T: ToString, I: IntoIterator<Item = T>>(
     }
     iter.into_iter().map(move |n| {
         let s = n.to_string();
-        let s = modified_stream.join(&s);
-        s.parse::<TokenStream>().unwrap()
+        modified_stream.join(&s)
     })
 }
 #[cfg(test)]
