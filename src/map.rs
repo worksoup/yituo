@@ -196,8 +196,8 @@ where
     if count < 4 {
         panic!("格式错误！格式为：`macro_name!(Literal1, Literal2, M)`.")
     }
-    let first = values.pop().unwrap();
     let second = values.pop().unwrap();
+    let first = values.pop().unwrap();
     replace(f(first, second), mapper)
 }
 
