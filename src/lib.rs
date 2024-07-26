@@ -9,7 +9,7 @@ use syn::{LitByte, LitStr};
 /// `M` 为任意表达式序列，其中的 `$` 将被替换为 `expr`, `$$` 转义为 `$`.
 #[proc_macro]
 pub fn map(input: TokenStream) -> TokenStream {
-    map_single_expr(input.into(), |expr| expr.to_token_stream())
+    map_single_expr(input.into(), |expr| quote::ToTokens::to_token_stream(&expr))
         .collect::<String>()
         .parse()
         .unwrap()
