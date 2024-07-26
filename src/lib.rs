@@ -7,16 +7,12 @@ use proc_macro::TokenStream;
 use quote::{quote, ToTokens};
 use syn::{LitByte, LitStr};
 
-/// 输入一个表达式 `expr`，生成 `M(expr)`, 
+/// 输入一个表达式 `expr`，生成 `M(expr)`,
 /// `M` 为任意表达式序列，其中的 `$` 将被替换为 `expr`, `$$` 转义为 `$`.
 #[proc_macro]
 pub fn map(input: TokenStream) -> TokenStream {
-    let r = map_single_expr(input.into(), |expr| {
-        expr.to_token_stream()
-    });
-    let r = quote! {
-        (#(#r),*)
-    };
+    let r = map_single_expr(input.into(), |expr| expr.to_token_stream())
+        .collect::<proc_macro2::TokenStream>();
     r.into()
 }
 /// 输入一个字面值 `n`，生成元组序列 `0..n`.
