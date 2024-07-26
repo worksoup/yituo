@@ -3,7 +3,6 @@ mod map;
 
 use crate::map::{map_double_lit, map_single_expr, map_single_lit, MyLit, MyLitEnum};
 use proc_macro::TokenStream;
-use quote::ToTokens;
 use syn::{LitByte, LitStr};
 
 /// 输入一个表达式 `expr`，生成 `M(expr)`,
@@ -31,7 +30,7 @@ pub fn map_seq(input: TokenStream) -> TokenStream {
     })
     .map(|s| s.parse::<proc_macro2::TokenStream>().unwrap());
     let r = quote::quote! {
-       #(#r),*
+       (#(#r),*)
     };
     r.into()
 }
