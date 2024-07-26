@@ -70,7 +70,7 @@ fn lit_2_my_lit(lit: Lit, span: Span, negative_value: bool) -> MyLit {
     };
     MyLit(lit, span)
 }
-pub fn map_single<T, F, I>(input: TokenStream, f: F) -> impl Iterator<Item = TokenStream>
+pub fn map_single_lit<T, F, I>(input: TokenStream, f: F) -> impl Iterator<Item = TokenStream>
 where
     T: ToString,
     F: Fn(MyLit) -> I,
@@ -118,7 +118,39 @@ where
     }
     replace(f(value.unwrap()), mapper)
 }
-pub fn map_double<T, F, I>(input: TokenStream, f: F) -> impl Iterator<Item = TokenStream>
+
+pub fn map_single_expr<T, F, I>(input: TokenStream, f: F) -> impl Iterator<Item = TokenStream>
+where
+    T: ToString,
+    F: Fn(TokenTree) -> I,
+    I: IntoIterator<Item = T>,
+{
+    let mut value = None;
+    let mut mapper = Vec::new();
+    let mut count = 0;
+    for expr in input {
+        match count {
+            0 => {
+                value = Some(expr);
+            }
+            1 => {
+                if let TokenTree::Punct(punct) = expr
+                    && punct.as_char() == ','
+                {
+                } else {
+                    panic!("格式错误！应为半角逗号。")
+                }
+            }
+            _ => mapper.push(expr),
+        }
+        count += 1;
+    }
+    if count < 2 {
+        panic!("格式错误！格式为：`macro_name!(Expr, M)`.")
+    }
+    replace(f(value.unwrap()), mapper)
+}
+pub fn map_double_lit<T, F, I>(input: TokenStream, f: F) -> impl Iterator<Item = TokenStream>
 where
     T: ToString,
     F: Fn(MyLit, MyLit) -> I,
