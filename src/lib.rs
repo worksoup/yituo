@@ -17,6 +17,30 @@ pub fn map(input: TokenStream) -> TokenStream {
 /// 输入一个字面值 `n`，生成元组序列 `0..n`.
 /// 最终生成表达式元组序列 `(M(0)..M(n))`, 见 [`map`](macro@map).
 #[proc_macro]
+pub fn map_each(input: TokenStream) -> TokenStream {
+    map_single_lit(input.into(), |lit| {
+        let e = lit.0;
+        let e = match e {
+            MyLitEnum::Byte(lit) => 0..lit as i128,
+            MyLitEnum::Int(lit) => 0..lit,
+            _ => {
+                panic!("第一个参数应为整数的字面值！")
+            }
+        };
+        let r = quote::quote! {
+           (#(#e),*)
+        };
+        Some(r.to_string())
+    })
+    .next()
+    .unwrap()
+    .parse::<proc_macro2::TokenStream>()
+    .unwrap()
+    .into()
+}
+/// 输入一个字面值 `n`，生成元组序列 `0..n`.
+/// 最终生成表达式 `M(0..n)`, 见 [`map`](macro@map).
+#[proc_macro]
 pub fn map_seq(input: TokenStream) -> TokenStream {
     let r = map_single_lit(input.into(), |lit| {
         let e = lit.0;
